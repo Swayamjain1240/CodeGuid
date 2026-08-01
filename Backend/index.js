@@ -3,6 +3,9 @@ import dotenv from "dotenv"
 import cors from "cors"
 import connectDB from "./lib/db.js";
 
+import webhookRoutes from "./routers/webhookRoutes.js"
+import dashboardRoutes from "./routers/dashboardRoutes.js"
+
 dotenv.config();
 
 const app = express()

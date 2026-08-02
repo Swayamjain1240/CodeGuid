@@ -2,6 +2,10 @@ import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
 import connectDB from "./lib/db.js";
+
+
+import { requestLogger } from './middlewares/requestLogger.js';
+import { rateLimiter } from './middlewares/rateLimiter.js';
 import {errorHandler} from "./middlewares/errorHandler.js"
 import {notFound} from "./middlewares/notFound.js"
 
@@ -21,6 +25,9 @@ app.use(express.json({
     },
 }));
 
+app.use(requestLogger);
+app.use(rateLimiter);
+
 app.get("/healh", (req,res)=>{
     res.status(200).json({status: "OK", service: "Code Guardian Backend"});
 })
@@ -28,8 +35,8 @@ app.get("/healh", (req,res)=>{
 app.use("/api/v1/webhooks", webhookRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 
-app.use(notFound())
-app.use(errorHandler());
+app.use(notFound)
+app.use(errorHandler);
 
 
 app.use((err,req,res,next)=>{

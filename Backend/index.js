@@ -2,6 +2,8 @@ import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
 import connectDB from "./lib/db.js";
+import {errorHandler} from "./middlewares/errorHandler.js"
+import {notFound} from "./middlewares/notFound.js"
 
 import webhookRoutes from "./routers/webhookRoutes.js"
 import dashboardRoutes from "./routers/dashboardRoutes.js"
@@ -11,7 +13,7 @@ dotenv.config();
 const app = express()
 const PORT = process.env.PORT
 
-app.use(cors())
+app.use(cors());
 
 app.use(express.json({
     verify:(req,res,buf)=>{
@@ -25,6 +27,10 @@ app.get("/healh", (req,res)=>{
 
 app.use("/api/v1/webhooks", webhookRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
+
+app.use(notFound())
+app.use(errorHandler());
+
 
 app.use((err,req,res,next)=>{
     console.error("UnHandle server error", err.stack);

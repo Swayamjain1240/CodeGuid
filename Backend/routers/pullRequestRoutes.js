@@ -1,5 +1,5 @@
 import express from "express"
-import {} from "../controllers/"
+import {getPullRequests, getPullRequestsById, triggerPRRescan} from "../controllers/pullrequestController.js"
 
 import {authMiddleware} from "../middlewares/authenticateUser.js"
 

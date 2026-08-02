@@ -11,6 +11,11 @@ import {notFound} from "./middlewares/notFound.js"
 
 import webhookRoutes from "./routers/webhookRoutes.js"
 import dashboardRoutes from "./routers/dashboardRoutes.js"
+import authRoutes from "./routers/authRoutes.js"
+import healthRoutes from "./routers/healthRoutes.js"
+import pullRequestRoutes from "./routers/pullRequestRoutes.js"
+import repositoryRoutes from "./routers/repositoryRoutes.js"
+
 
 dotenv.config();
 
@@ -34,6 +39,11 @@ app.get("/healh", (req,res)=>{
 
 app.use("/api/v1/webhooks", webhookRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
+app.use("/api/v1/health", healthRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/repositories", repositoryRoutes);
+app.use("/api/v1/pull-requests", pullRequestRoutes);
+
 
 app.use(notFound)
 app.use(errorHandler);

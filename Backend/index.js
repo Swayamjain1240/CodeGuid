@@ -16,6 +16,7 @@ import healthRoutes from "./routers/healthRoutes.js"
 import pullRequestRoutes from "./routers/pullRequestRoutes.js"
 import repositoryRoutes from "./routers/repositoryRoutes.js"
 
+import "./queues/prWorker.js"
 
 dotenv.config();
 

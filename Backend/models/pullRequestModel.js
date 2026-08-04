@@ -80,7 +80,7 @@ const pullRequestSchema = new mongoose.Schema(
       type: Number, // Scale 0 - 100
       default: 100,
     },
-    vulnerabilities: [vulnerabilityFindingSchema],
+    vulnerabilities: [vulnerabilityFindSchema],
     agentLogs: [agentLogSchema],
     
     selfCorrectionAttempts: {
@@ -100,3 +100,5 @@ const pullRequestSchema = new mongoose.Schema(
 pullRequestSchema.index({repository: 1, prNumber: 1}, {unique: true});
 
 const PullRequest = mongoose.model("PullRequest", pullRequestSchema);
+
+export default PullRequest ;

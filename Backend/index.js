@@ -2,10 +2,12 @@ import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
 import connectDB from "./lib/db.js";
+import dns from "dns"
+dns.setServers(["1.1.1.1", "8.8.8.8"])
 
 
 import { requestLogger } from './middlewares/requestLogger.js';
-import { rateLimiter } from './middlewares/rateLimiter.js';
+import { rate } from './middlewares/rateLimiter.js';
 import {errorHandler} from "./middlewares/errorHandler.js"
 import {notFound} from "./middlewares/notFound.js"
 
@@ -32,7 +34,7 @@ app.use(express.json({
 }));
 
 app.use(requestLogger);
-app.use(rateLimiter);
+app.use(rate);
 
 app.get("/healh", (req,res)=>{
     res.status(200).json({status: "OK", service: "Code Guardian Backend"});
@@ -55,7 +57,7 @@ app.use((err,req,res,next)=>{
     res.status(500).json({error: "internal server errror"})
 });
 
-app.listen(prompt,()=>{
+app.listen(PORT,()=>{
     console.log(`server is running on PORT ${PORT}`)
     connectDB()
 });

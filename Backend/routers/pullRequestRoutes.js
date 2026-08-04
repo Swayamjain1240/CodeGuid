@@ -8,7 +8,7 @@ const router = express.Router()
 router.use(authMiddleware)
 
 router.get("/", getPullRequests);
-router.get('/:id', getPullRequestById);
+router.get('/:id', getPullRequestsById);
 router.post('/:id/rescan', triggerPRRescan);
 
 export default router;

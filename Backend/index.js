@@ -1,5 +1,6 @@
 import express from "express"
 import dotenv from "dotenv"
+dotenv.config();
 import cors from "cors"
 import connectDB from "./lib/db.js";
 import dns from "dns"
@@ -20,12 +21,13 @@ import repositoryRoutes from "./routers/repositoryRoutes.js"
 
 import "./queues/prWorker.js"
 
-dotenv.config();
 
 const app = express()
 const PORT = process.env.PORT
 
 app.use(cors());
+
+app.use(cookieParser());
 
 app.use(express.json({
     verify:(req,res,buf)=>{
@@ -36,7 +38,7 @@ app.use(express.json({
 app.use(requestLogger);
 app.use(rate);
 
-app.get("/healh", (req,res)=>{
+app.get("/health", (req,res)=>{
     res.status(200).json({status: "OK", service: "Code Guardian Backend"});
 })
 
@@ -52,10 +54,6 @@ app.use(notFound)
 app.use(errorHandler);
 
 
-app.use((err,req,res,next)=>{
-    console.error("UnHandle server error", err.stack);
-    res.status(500).json({error: "internal server errror"})
-});
 
 app.listen(PORT,()=>{
     console.log(`server is running on PORT ${PORT}`)

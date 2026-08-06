@@ -6,14 +6,14 @@ export const getDashboardStarts = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const totalRes = await Repository.countDocuments({ owner: userId });
+        const totalRepos = await Repository.countDocuments({ owner: userId });
 
         const userRepo = await Repository.find({ owner: userId }).select("_id");
         const repoId = userRepo.map((repo) => repo._id);
 
 
         const totalPRs = await PullRequest.countDocuments({ repository: { $in: repoId } });
-        const passedRepo = await PullRequest.countDocuments({ repository: { $iin: repoId }, status: PR_STATUS.PASSED });
+        const passedPRs = await PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.PASSED });
         const failedPRs = await PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.FAILED });
         const scanningPRs = await PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.SCANNING });
 
@@ -43,7 +43,7 @@ export const getDashboardStarts = async (req, res) => {
             }
         });
 
-        const recentScans = await PullRequest.find({ repository: { #in: repoId } })
+        const recentScans = await PullRequest.find({ repository: { $in: repoId } })
             .sort({ createdAt: -1 })
             .limit(5)
             .populate('repository', 'name fullName')
@@ -62,13 +62,13 @@ export const getDashboardStarts = async (req, res) => {
                     scanningPRs,
                     passRate,
                 },
-                vulnerabilities: severityCounts,
+                vulnerabilities: serityCounts,
                 recentScans,
             },
         });
 
     } catch (error) {
         console.error("error in get dashboard starts");
-        return res.status(500).json({ success: fase, message: "internal server error" });
+        return res.status(500).json({ success: false, message: "internal server error" });
     }
 }

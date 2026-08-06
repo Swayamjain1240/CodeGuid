@@ -32,8 +32,8 @@ export const githubCallback = async (req, res) => {
         })
 
         const token = await tokenResponse.json();
-        const githubAccessToken = token.access_tokrn;
-        if (githubAccessToken) {
+        const githubAccessToken = token.access_token;
+        if (!githubAccessToken) {
             return res.status(401).json({ error: 'Failed to retrieve GitHub access token' });
         }
 
@@ -48,19 +48,19 @@ export const githubCallback = async (req, res) => {
             const emailResponse = await fetch('https://api.github.com/user/emails', {
                 headers: { Authorization: `Bearer ${githubAccessToken}` },
             });
-            const emails = await emailResponse.JSON();
-            const pryObj = emails.find((e) => e.primary) || email[0];
+            const emails = await emailResponse.json();
+            const pryObj = emails.find((e) => e.primary) || emails[0];
             primaryEmail = pryObj ? pryObj.email : null;
 
         }
         let user = await User.findOne({ githubId: githubUser.id.toString() });
         if (!user) {
             user = new User({
-                githubId: githubAccessToken.id.toString(),
-                username: github.login,
+                githubId: githubUser.id.toString(),
+                username: githubUser.login,
                 name: githubUser.name || githubUser.login,
                 email: primaryEmail,
-                avatarUrl: github.avatar_url,
+                avatarUrl: githubUser.avatar_url,
                 githubAccessToken,
             });
         } else {
@@ -105,7 +105,7 @@ export const refreshToken = async (req, res) => {
             return res.status(403).json({ error: 'Invalid or revoked refresh token' });
         }
 
-        const newAccessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+        const newAccessToken = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRE });
 
         return res.status(200).json({ success: true, accessToken: newAccessToken });
 

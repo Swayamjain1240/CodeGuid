@@ -76,25 +76,55 @@ export const githubCallback = async (req, res) => {
         user.refreshToken = refreshToken;
         await user.save()
 
-        res.cookie('refreshToken', refreshToken,{
+        res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure:process.env.NODE_ENV === 'production',
-            sameSite:'lax',
-            maxAge: 7*24*60*60*1000,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
         const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
         return res.redirect(`${clientUrl}/auth-success?token=${accessToken}`);
-    
+
     } catch (error) {
-    console.error("error in githubCallback", error)
-    return res.status(500).json({ success: false, message: "internal server error" });
+        console.error("error in githubCallback", error)
+        return res.status(500).json({ success: false, message: "internal server error" });
+    }
 }
+
+export const refreshToken = async (req, res) => {
+    try {
+        const token = req.cookies?.refreshToken;
+        if (!token) {
+            return res.status(401).json({ message: "Refresh Token Not Found" });
+        }
+
+        const decode = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+        const user = await User.findById(decode.userId);
+        if (!user || user.refreshToken != token) {
+            return res.status(403).json({ error: 'Invalid or revoked refresh token' });
+        }
+
+        const newAccessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+
+        return res.status(200).json({ success: true, accessToken: newAccessToken });
+
+    } catch (error) {
+        return res.status(403).json({ error: 'Expired or invalid refresh token' });
+    }
 }
 
 export const getCurrentUser = async (req, res) => {
     try {
+        const user = await User.findById(req.user.id).select("-refreshToken -githubAccessToken");
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' })
+        };
 
+        return res.status(200).json({
+            success: true,
+            user,
+        });
     } catch (error) {
         console.error("error in getCurrent user", error)
         return res.status(500).json({ success: false, message: "internal server error" });
@@ -103,7 +133,18 @@ export const getCurrentUser = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
     try {
+        const token = req.cookies?.refreshToken;
+        if(!token){
+            await User.findOneAndUpdate({ refreshToken: token }, { refreshToken: null });
+        };
 
+        res.clearCookie("refreshToken",{
+            httpOnly:true,
+            secure:process.env.NODE_ENV === 'production',
+            sameSite:'lax',
+        });
+
+        return res.status(200).json({ success: true, message: 'Logged out successfully' });
     } catch (error) {
         console.error("error in logout user", error)
         return res.status(500).json({ success: false, message: "internal server error" });

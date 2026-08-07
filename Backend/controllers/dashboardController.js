@@ -2,21 +2,27 @@ import PullRequest from "../models/pullRequestModel.js"
 import Repository from "../models/repositoryModel.js"
 import { PR_STATUS } from "../config/constants.js"
 
-export const getDashboardStarts = async (req, res) => {
+export const getDashboardStats = async (req, res) => {
     try {
         const userId = req.user.id;
-
-        const totalRepos = await Repository.countDocuments({ owner: userId });
 
         const userRepo = await Repository.find({ owner: userId }).select("_id");
         const repoId = userRepo.map((repo) => repo._id);
 
 
-        const totalPRs = await PullRequest.countDocuments({ repository: { $in: repoId } });
-        const passedPRs = await PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.PASSED });
-        const failedPRs = await PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.FAILED });
-        const scanningPRs = await PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.SCANNING });
-
+        const [
+            totalRepos,
+            totalPRs,
+            passedPRs,
+            failedPRs,
+            scanningPRs,
+        ] = await Promise.all([
+            Repository.countDocuments({ owner: userId }),
+            PullRequest.countDocuments({ repository: { $in: repoId } }),
+            PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.PASSED }),
+            PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.FAILED }),
+            PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.SCANNING }),
+        ]);
         const passRate = totalPRs > 0 ? Number(((passedPRs / totalPRs) * 100).toFixed(1)) : 100;
 
         const vulnerabilityStats = await PullRequest.aggregate([
@@ -30,7 +36,7 @@ export const getDashboardStarts = async (req, res) => {
             },
         ]);
 
-        const serityCounts = {
+        const severityCounts = {
             CRITICAL: 0,
             HIGH: 0,
             MEDIUM: 0,
@@ -62,7 +68,7 @@ export const getDashboardStarts = async (req, res) => {
                     scanningPRs,
                     passRate,
                 },
-                vulnerabilities: serityCounts,
+                vulnerabilities: severityCounts,
                 recentScans,
             },
         });

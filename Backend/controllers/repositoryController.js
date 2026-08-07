@@ -1,12 +1,12 @@
 import Repository from "../models/repositoryModel.js"
-
-
+import User from "../models/userModel.js"
+import mongoose from "mongoose";
 
 export const getUserRepositories = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const repository = await Repository.find({ awner: userId }).sort({ upadetedAt: -1 })
+        const repository = await Repository.find({ owner: userId }).sort({ updatedAt: -1 }).select("-qdrantCollectionId")
 
         return res.status(200).json({ success: true, count: repository.length, data: repository });
     } catch (error) {
@@ -36,8 +36,18 @@ export const syncGitHubRepositories = async (req, res) => {
             },
         });
 
+        if (response.status === 401) {
+            return res.status(401).json({
+                success: false,
+                error: "GitHub token expired. Please login again.",
+            });
+        }
+
         if (!response.ok) {
-            throw new Error(`GitHub API error: ${response.statusText}`);
+            return res.status(502).json({
+                success: false,
+                error: "GitHub API unavailable.",
+            });
         }
 
         const githubRepos = await response.json();
@@ -54,13 +64,14 @@ export const syncGitHubRepositories = async (req, res) => {
                     private: repo.private,
                     htmlUrl: repo.html_url,
                     defaultBranch: repo.default_branch,
-                    updatedAt: new Date(),
                 },
                 { upsert: true, new: true }
             );
         });
 
-        const syncedRepos = await Promise.all(syncOperations);
+        await Promise.all(syncOperations);
+
+        const syncedRepos = await Repository.find({ owner: userId }).sort({ updatedAt: -1 });
 
         console.log(`[Sync] Successfully synced ${syncedRepos.length} repositories for user ${userId}`);
 
@@ -79,6 +90,13 @@ export const getRepositoryById = async (req, res) => {
     try {
         const userId = req.user.id;
         const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid repository ID",
+            });
+        }
 
         const repository = await Repository.findById(id);
 
@@ -104,6 +122,13 @@ export const toggleRepositoryStatus = async (req, res) => {
     try {
         const userId = req.user.id;
         const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid repository ID",
+            });
+        }
 
         const repository = await Repository.findById(id);
 

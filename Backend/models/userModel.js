@@ -1,35 +1,46 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-    githubId:{
-        type:String,
-        required:true,
-        unique:true,
-        index:true,
+const userSchema = new mongoose.Schema(
+  {
+    githubId: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
     },
-    username:{
-        type:String,
-        required:true,
-        trim: true,
+    username: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    email:{
-        type:String,
-        required: true,
-        trim:true,
+    name: {
+      type: String,
+      trim: true,
     },
-    avatarUrl:{
-        type:String,
+    email: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    accessToken:{
-        type:String,
-        required:true,
+    avatarUrl: {
+      type: String,
     },
-    role:{
-        type:String,
-        enum:['user', 'admin']
+    githubAccessToken: {
+      required: true,
     },
-},{timestamps:true});
+    refreshToken: {
+      type: String,
+      default: null,
+      index: true,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+  },
+  { timestamps: true }
+);
 
-const User = new mongoose.model("User", userSchema)
-
+const User = mongoose.model("User", userSchema);
 export default User;

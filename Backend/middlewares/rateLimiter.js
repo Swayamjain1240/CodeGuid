@@ -9,4 +9,4 @@ export const rate = rateLimit({
         success: false,
         error:'Too many requests from this IP, please try again after 15 minutes.',
     }
-})
+});

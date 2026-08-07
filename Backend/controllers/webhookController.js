@@ -50,4 +50,4 @@ export const handleGitHubWebhook = async (req, res, next) => {
         console.error('[Webhook Controller Error]', error.message);
         return res.status(500).json({ error: 'Failed to process incoming webhook.' });
     }
-}
+};

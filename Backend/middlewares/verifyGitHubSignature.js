@@ -42,4 +42,4 @@ export const verifyGithubSig = (req, res, next) => {
         console.error('Signature Verification Error:', error.message);
         return res.status(500).json({ error: 'Internal server error during verification' });
     }
-}
+};

@@ -42,4 +42,4 @@ export const authMiddleware = async (req, res, next) => {
             error: 'Invalid access token.',
         });
     }
-}
+};

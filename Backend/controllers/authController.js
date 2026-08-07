@@ -9,7 +9,7 @@ export const githubLogin = async (req, res) => {
         console.error("error in githubLogin", error)
         return res.status(500).json({ success: false, message: "internal server error" });
     }
-}
+};
 
 export const githubCallback = async (req, res) => {
     try {
@@ -90,7 +90,7 @@ export const githubCallback = async (req, res) => {
         console.error("error in githubCallback", error)
         return res.status(500).json({ success: false, message: "internal server error" });
     }
-}
+};
 
 export const refreshToken = async (req, res) => {
     try {
@@ -112,7 +112,7 @@ export const refreshToken = async (req, res) => {
     } catch (error) {
         return res.status(403).json({ error: 'Expired or invalid refresh token' });
     }
-}
+};
 
 export const getCurrentUser = async (req, res) => {
     try {
@@ -129,7 +129,7 @@ export const getCurrentUser = async (req, res) => {
         console.error("error in getCurrent user", error)
         return res.status(500).json({ success: false, message: "internal server error" });
     }
-}
+};
 
 export const logoutUser = async (req, res) => {
     try {
@@ -149,4 +149,4 @@ export const logoutUser = async (req, res) => {
         console.error("error in logout user", error)
         return res.status(500).json({ success: false, message: "internal server error" });
     }
-}
+};

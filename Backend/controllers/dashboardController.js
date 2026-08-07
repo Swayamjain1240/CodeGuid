@@ -71,4 +71,4 @@ export const getDashboardStarts = async (req, res) => {
         console.error("error in get dashboard starts");
         return res.status(500).json({ success: false, message: "internal server error" });
     }
-}
+};

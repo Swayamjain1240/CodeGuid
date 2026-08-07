@@ -37,17 +37,41 @@ export const githubCallback = async (req, res) => {
             return res.status(401).json({ error: 'Failed to retrieve GitHub access token' });
         }
 
-        const userResponse = await fetch('https://api.github.com/user', {
-            headers: { authorization: `Bearer ${githubAccessToken}` },
-        });
+        const userResponse = await fetch(
+            "https://api.github.com/user",
+            {
+                headers: {
+                    Authorization: `Bearer ${githubAccessToken}`,
+                    Accept: "application/vnd.github+json",
+                    "User-Agent": "GitGuard"
+                }
+            }
+        );
+
+        if (!userResponse.ok) {
+            return res.status(502).json({
+                success: false,
+                error: "Failed to fetch GitHub user.",
+            });
+        }
+
 
         const githubUser = await userResponse.json();
 
         let primaryEmail = githubUser.email;
         if (!primaryEmail) {
             const emailResponse = await fetch('https://api.github.com/user/emails', {
-                headers: { Authorization: `Bearer ${githubAccessToken}` },
+                headers: {
+                    Authorization: `Bearer ${githubAccessToken}`,
+                },
             });
+            if (!emailResponse.ok) {
+                return res.status(502).json({
+                    success: false,
+                    error: "Failed to fetch GitHub email.",
+                });
+            }
+
             const emails = await emailResponse.json();
 
             if (Array.isArray(emails)) {
@@ -55,14 +79,15 @@ export const githubCallback = async (req, res) => {
                 primaryEmail = pryObj ? pryObj.email : null;
             }
 
-        }
+        };
+
         let user = await User.findOne({ githubId: githubUser.id.toString() });
         if (!user) {
             user = new User({
                 githubId: githubUser.id.toString(),
                 username: githubUser.login,
                 name: githubUser.name || githubUser.login,
-                email: primaryEmail,
+                email: primaryEmail || `${githubUser.login}@users.noreply.github.com`,
                 avatarUrl: githubUser.avatar_url,
                 githubAccessToken,
             });
@@ -137,7 +162,7 @@ export const getCurrentUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
     try {
         const token = req.cookies?.refreshToken;
-        if (!token) {
+        if (token) {
             await User.findOneAndUpdate({ refreshToken: token }, { refreshToken: null });
         } else if (req.user?._id) {
             await User.findByIdAndUpdate(req.user._id, { refreshToken: null })

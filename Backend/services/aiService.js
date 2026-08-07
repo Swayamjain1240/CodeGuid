@@ -1,4 +1,4 @@
-import { GoogleGenerativeAi } from "@google/generative-ai"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -38,7 +38,12 @@ export const analyzeDiffWithAI = async (diffText) => {
     `;
 
         const result = await model.generateContent(prompt);
-        const responseText = result.response.text();
+        const responseText = result.response
+            .text()
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
+
         const analysis = JSON.parse(responseText);
 
         return analysis;

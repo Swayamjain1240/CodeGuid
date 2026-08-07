@@ -1,6 +1,6 @@
 import PullRequest from "../models/pullRequestModel.js";
 import Repository from "../models/repositoryModel.js";
-
+import mongoose from "mongoose";
 import { prQueue } from "../queues/prQueue.js";
 import { PR_STATUS } from "../config/constants.js";
 
@@ -14,6 +14,13 @@ export const getPullRequests = async (req, res) => {
 
         const filter = { repository: { $in: repoIds } };
         if (repoId) {
+            if (!repoIds.some(id => id.toString() === repoId)) {
+                return res.status(403).json({
+                    success: false,
+                    error: "Unauthorized repository."
+                });
+            }
+
             filter.repository = repoId;
         }
         if (status) {
@@ -53,6 +60,13 @@ export const getPullRequestsById = async (req, res) => {
         const userId = req.user.id;
         const { id } = req.params;
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid Pull Request ID",
+            });
+        }
+
         const pullRequest = await PullRequest.findById(id).populate('repository');
 
         if (!pullRequest) {
@@ -78,18 +92,25 @@ export const triggerPRRescan = async (req, res) => {
         const userId = req.user.id;
         const { id } = req.params;
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid Pull Request ID",
+            });
+        }
+
         const pullRequest = await PullRequest.findById(id).populate('repository');
 
         if (!pullRequest) {
             return res.status(404).json({ success: false, error: 'Pull request scan not found.' });
         }
 
-        
+
         if (pullRequest.repository.owner.toString() !== userId.toString()) {
             return res.status(403).json({ success: false, error: 'Unauthorized to trigger re-scan for this repository.' });
         }
 
-        pullRequest.status = PR_STATUS.SCANNING || 'SCANNING';
+        pullRequest.status = PR_STATUS.SCANNING;
         await pullRequest.save();
 
         const jobData = {

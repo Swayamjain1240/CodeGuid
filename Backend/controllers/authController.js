@@ -49,8 +49,11 @@ export const githubCallback = async (req, res) => {
                 headers: { Authorization: `Bearer ${githubAccessToken}` },
             });
             const emails = await emailResponse.json();
-            const pryObj = emails.find((e) => e.primary) || emails[0];
-            primaryEmail = pryObj ? pryObj.email : null;
+
+            if (Array.isArray(emails)) {
+                const pryObj = emails.find((e) => e.primary) || emails[0];
+                primaryEmail = pryObj ? pryObj.email : null;
+            }
 
         }
         let user = await User.findOne({ githubId: githubUser.id.toString() });
@@ -116,7 +119,7 @@ export const refreshToken = async (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select("-refreshToken -githubAccessToken");
+        const user = await User.findById(req.user._id).select("-refreshToken -githubAccessToken");
         if (!user) {
             return res.status(404).json({ error: 'User not found' })
         };
@@ -134,14 +137,16 @@ export const getCurrentUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
     try {
         const token = req.cookies?.refreshToken;
-        if(!token){
+        if (!token) {
             await User.findOneAndUpdate({ refreshToken: token }, { refreshToken: null });
-        };
+        } else if (req.user?._id) {
+            await User.findByIdAndUpdate(req.user._id, { refreshToken: null })
+        }
 
-        res.clearCookie("refreshToken",{
-            httpOnly:true,
-            secure:process.env.NODE_ENV === 'production',
-            sameSite:'lax',
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
         });
 
         return res.status(200).json({ success: true, message: 'Logged out successfully' });

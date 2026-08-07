@@ -1,7 +1,7 @@
 export const requestLogger = (req, res, next) => {
     const start = Date.now();
 
-    res.on("finsih", () => {
+    res.on("finish", () => {
         const duration = Date.now() - start;
         const statusCode = res.statusCode;
 

@@ -255,8 +255,8 @@ pip install -r requirements.txt
 | ----------------------- | ----------------- |
 | Frontend                | 🚧 In Development |
 | Backend API             | ✅  Complete      |
-| GitHub Webhooks         | 🚧 In Development |
-| BullMQ Queue            | 🚧 In Development |
+| GitHub Webhooks         | ✅  Complete      |
+| BullMQ Queue            | ✅  Complete      |
 | FastAPI AI Service      | 🚧 In Development |
 | LangGraph Workflow      | 🚧 In Development |
 | Tree-Sitter Integration | 🚧 In Development |

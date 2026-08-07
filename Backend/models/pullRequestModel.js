@@ -63,26 +63,26 @@ const pullRequestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    branch: { // Added branch field matching worker payload
+    branch: { 
       type: String,
     },
-    baseBranch: { // Added baseBranch field matching worker payload
+    baseBranch: { 
       type: String,
     },
     commitSha: {
       type: String,
       required: true,
     },
-    author: { // Flexible definition supporting both String username and Object
+    author: { 
       type: mongoose.Schema.Types.Mixed,
       required: true,
     },
     status: {
       type: String,
-      enum: ["QUEUED", "PROCESSING", "SCANNING", "PASSED", "FAILED", "COMPLETED"], // Expanded enum values to cover worker and dashboard statuses
+      enum: ["QUEUED", "PROCESSING", "SCANNING", "PASSED", "FAILED", "COMPLETED"], 
       default: "QUEUED",
     },
-    securityGrade: { // Added field matching AI Service
+    securityGrade: { 
       type: String,
       enum: ["A", "B", "C", "D", "F"],
     },
@@ -103,6 +103,7 @@ const pullRequestSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    rawAiResponse: { type: String }
   },
   {
     timestamps: true,

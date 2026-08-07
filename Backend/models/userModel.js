@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      index: true,
     },
     username: {
       type: String,
@@ -21,11 +20,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      lowercase:true,
     },
     avatarUrl: {
       type: String,
     },
-    githubAccessToken: {
+    githubAccessToken: { //type:String
       required: true,
     },
     refreshToken: {

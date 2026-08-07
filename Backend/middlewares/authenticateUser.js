@@ -5,8 +5,8 @@ export const authMiddleware = async (req, res, next) => {
     try {
         let accessToken;
 
-        if (req.headers.authorization && req.headers.authorization.startWith("Bearer")) {
-            accessToken = req.headers.authorization.split("")[1];
+        if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+            accessToken = req.headers.authorization.split(" ")[1];
         } else if (req.cookies?.accessToken) {
             accessToken = req.cookies.accessToken;
         }
@@ -20,8 +20,8 @@ export const authMiddleware = async (req, res, next) => {
 
         const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
-        const user = await User.findById(decode.user.Id).select("-accessToken")
-        if (user) {
+        const user = await User.findById(decode.userId || decode.id).select("-refreshToken")
+        if (!user) {
             return res.status(401).json({ success: false, error: "User account no longer exist" })
         };
 

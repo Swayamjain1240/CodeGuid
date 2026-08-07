@@ -24,8 +24,8 @@ export const verifyGithubSig = (req, res, next) => {
         const hmac = crypto.createHmac('sha256', secret);
         const digest = 'sha256=' + hmac.update(req.rawBody).digest('hex');
 
-        const checkSum = Buffer.from(sig, 'utf-8');
-        const expectedCheckSum = Buffer.from(digest, 'utf-8');
+        const checksum = Buffer.from(sig, 'utf-8');
+        const expectedChecksum = Buffer.from(digest, 'utf-8');
 
         if (
             checksum.length !== expectedChecksum.length ||

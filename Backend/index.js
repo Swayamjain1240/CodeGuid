@@ -4,7 +4,6 @@ dotenv.config();
 import cors from "cors"
 import connectDB from "./lib/db.js";
 import dns from "dns"
-dns.setServers(["1.1.1.1", "8.8.8.8"])
 import cookieParser from "cookie-parser";
 
 import { requestLogger } from './middlewares/requestLogger.js';
@@ -25,6 +24,7 @@ import "./queues/prWorker.js"
 const app = express()
 const PORT = process.env.PORT
 
+dns.setServers(["1.1.1.1", "8.8.8.8"])
 app.use(cors());
 
 app.use(cookieParser());
@@ -43,6 +43,10 @@ app.use(rate);
 app.get("/health", (req, res) => {
     res.status(200).json({ status: "OK", service: "Code Guardian Backend" });
 })
+
+app.get("/favicon.ico", (req, res) => {
+    res.status(204).end();
+});
 
 app.use("/api/v1/webhooks", webhookRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);

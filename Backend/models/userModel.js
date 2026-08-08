@@ -25,7 +25,8 @@ const userSchema = new mongoose.Schema(
     avatarUrl: {
       type: String,
     },
-    githubAccessToken: { //type:String
+    githubAccessToken: { //
+      type:String,
       required: true,
     },
     refreshToken: {

@@ -25,7 +25,7 @@ const app = express()
 const PORT = process.env.PORT
 
 dns.setServers(["1.1.1.1", "8.8.8.8"])
-app.use(cors());
+// app.use(cors());
 
 app.use(cookieParser());
 
@@ -48,10 +48,10 @@ app.get("/favicon.ico", (req, res) => {
     res.status(204).end();
 });
 
+app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/webhooks", webhookRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/health", healthRoutes);
-app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/repositories", repositoryRoutes);
 app.use("/api/v1/pull-requests", pullRequestRoutes);
 

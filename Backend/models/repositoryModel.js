@@ -23,11 +23,11 @@ const repositorySchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    private: { // Added missing field used in sync controller
+    private: {
       type: Boolean,
       default: false,
     },
-    htmlUrl: { // Standardized property name
+    htmlUrl: {
       type: String,
     },
     defaultBranch: {
@@ -38,7 +38,7 @@ const repositorySchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    isScanningEnabled: { // Added field matching controller logic
+    isScanningEnabled: {
       type: Boolean,
       default: true,
     },

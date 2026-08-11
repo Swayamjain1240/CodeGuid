@@ -11,7 +11,7 @@ const vulnerabilityFindSchema = new mongoose.Schema({
     required: true,
   },
   owaspCategory: {
-    type: String, // Fixed typo: typr -> type
+    type: String,
   },
   filePath: {
     type: String,
@@ -24,7 +24,7 @@ const vulnerabilityFindSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  recommendation: { // Added recommendation alias alongside suggestedFix
+  recommendation: {
     type: String,
   },
   suggestedFix: {

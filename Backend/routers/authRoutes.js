@@ -8,7 +8,7 @@ const router = express.Router()
 router.get('/github', githubLogin);
 router.get('/github/callback', githubCallback);
 router.get('/me', authMiddleware, getCurrentUser);
-router.post('/logout', authMiddleware, logoutUser);
+router.post('/logout',logoutUser);
 router.post("/refresh", refreshToken)
 
 export default router;

@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 
 const router = express.Router();
 
-router.get("/", (res, req) => {
+router.get("/", (req, res) => {
     const dbState = mongoose.connection.readyState;
 
     const dbStatusMap = {

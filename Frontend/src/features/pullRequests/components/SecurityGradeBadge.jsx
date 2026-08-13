@@ -3,7 +3,7 @@ import { Badge } from "../../../components/common/Badge.jsx"
 import { getGradeVariant } from "../prUtils.js"
 
 
-const SecurityGradeBadge = () => {
+export const SecurityGradeBadge = () => {
 
     const variant = getGradeVariant(grade);
 
@@ -14,4 +14,3 @@ const SecurityGradeBadge = () => {
     );
 };
 
-export default SecurityGradeBadge

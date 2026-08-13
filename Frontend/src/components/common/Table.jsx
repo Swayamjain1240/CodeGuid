@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Table = ({ headers = [], children, emptyMessage = "No Data found" }) => {
+export const Table = ({ headers = [], children, emptyMessage = "No Data found" }) => {
     return (
         <div className="w-full overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/50">
             <table className="w-full text-left text-sm text-slate-300">
@@ -28,5 +28,3 @@ const Table = ({ headers = [], children, emptyMessage = "No Data found" }) => {
         </div>
     );
 };
-
-export default Table

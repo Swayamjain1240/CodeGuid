@@ -1,13 +1,26 @@
-# Python
-aiServices/venv/
-aiServices/__pycache__/
-__pycache__/
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
 
-# Environment
+# Environment Variables & Secrets
 .env
-aiServices/.env
+.env.local
+*.env
 
-# Node
-node_modules/
-Backend/node_modules/
-Frontend/node_modules/
+# Python Cache & Compiled Files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# IDE / Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Generated Files
+.DS_Store
+Thumbs.db

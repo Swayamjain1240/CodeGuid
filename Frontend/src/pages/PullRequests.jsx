@@ -5,7 +5,7 @@ import { Pagination } from "../components/common/Pagination.jsx"
 import { Spinner } from "../components/common/Spinner.jsx"
 import { ErrorMessage } from "../components/common/ErrorMessage.jsx"
 
-const PullRequests = () => {
+export const PullRequests = () => {
     const [pullRequests, setPullRequests] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -61,5 +61,3 @@ const PullRequests = () => {
         </div>
     );
 }
-
-export default PullRequests

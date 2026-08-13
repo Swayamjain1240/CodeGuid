@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ShieldAlert } from 'lucide-react'
 
-const NotFound = () => {
+export const NotFound = () => {
     return (
         <div className='min-h-screen flex items-center justify-center bg-slate-950 p-4'>
             <div className="text-center max-w-md">
@@ -23,5 +23,3 @@ const NotFound = () => {
         </div>
     )
 }
-
-export default NotFound

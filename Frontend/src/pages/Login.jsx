@@ -3,7 +3,7 @@ import { Shield, Lock } from "lucide-react"
 import { LoginButton } from "../features/auth/componentr/LoginButton.jsx"
 
 
-function Login() {
+export function Login() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4 relative overflow-hidden">
@@ -31,5 +31,3 @@ function Login() {
         </div>
     );
 }
-
-export default Login

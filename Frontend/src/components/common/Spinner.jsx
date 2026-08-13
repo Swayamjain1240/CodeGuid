@@ -1,7 +1,7 @@
 import React from 'react'
 import { Loader2 } from "lucide-react"
 
-const Spinner = ({size= "md", className= ""}) => {
+export const Spinner = ({size= "md", className= ""}) => {
 
     const size = {
         sm: "w-4 h-4",
@@ -16,4 +16,3 @@ const Spinner = ({size= "md", className= ""}) => {
   )
 }
 
-export default Spinner

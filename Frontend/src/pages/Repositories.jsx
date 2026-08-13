@@ -6,7 +6,7 @@ import { RepoList } from "../features/repositories/components/RepoList.jsx"
 import { RepoSyncButton } from "../features/repositories/components/RepoSyncButton.jsx"
 import { ErrorMessage } from "../components/common/ErrorMessage.jsx"
 
-const Repositories = () => {
+export const Repositories = () => {
 
     const [repos, setRepos] = useState([]);
     const [search, setSearch] = useState("")
@@ -103,5 +103,3 @@ const Repositories = () => {
         </div>
     );
 }
-
-export default Repositories

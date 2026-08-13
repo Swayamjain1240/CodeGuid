@@ -1,7 +1,7 @@
 import React from 'react'
 import { AlertTriangle } from "lucide-react"
 
-const ErrorMessage = ({message, onRetry}) => {
+export const ErrorMessage = ({message, onRetry}) => {
 
     if(!message) return null ;
 
@@ -21,4 +21,3 @@ const ErrorMessage = ({message, onRetry}) => {
     </div>
   );
 };
-export default ErrorMessage

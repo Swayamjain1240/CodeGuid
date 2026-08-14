@@ -3,15 +3,16 @@ import React , { Children, createContext, useEffect, useState } from "react"
 
 export const AuthContext = createContext(null)
 
-export const AuthProvider = ({Children}) => {
+export const AuthProvider = ({children}) => {
     const [user, setUser ] = useState(null);
-    const [loding, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     const fetchUser = async () => {
         try {
             setLoading(true);
             const data = await authApi.getCurrentUser();
-            setUser(data.user || data);
+
+            setUser(data?.user || data || null);
         } catch {
             setUser(null);
         }finally{
@@ -36,8 +37,8 @@ export const AuthProvider = ({Children}) => {
     };
 
     return (
-        <AuthContext.Provider value={{user, logout, loding, refreshUser: fetchUser , isAuthenticated:Boolean(user) }}>
-            {Children}
+        <AuthContext.Provider value={{user, logout, loading, refreshUser: fetchUser , isAuthenticated:Boolean(user) }}>
+            {children}
         </AuthContext.Provider>
     );
 }

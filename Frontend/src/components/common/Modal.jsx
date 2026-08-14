@@ -1,7 +1,7 @@
 import React from 'react'
 import { X } from "lucide-react"
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+export const Modal = ({ isOpen, onClose, title, children }) => {
 
     if (isOpen) return null;
     return (
@@ -23,5 +23,3 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         </div>
     )
 }
-
-export default Modal

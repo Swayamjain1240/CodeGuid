@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const MetricCard = () => {
+export const MetricCard = ({ title, value, subtext, icon: Icon, color = "cyan" }) => {
 
-    const color = {
+    const colors = {
         cyan: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
         emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
         amber: "bg-amber-500/10 text-amber-400 border-amber-500/20",

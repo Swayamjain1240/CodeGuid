@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Badge = ({ children, variant = "default", className = "" }) => {
+export const Badge = ({ children, variant = "default", className = "" }) => {
 
   const variants = {
     default: "bg-slate-800 text-slate-300 border-slate-700",
@@ -17,5 +17,3 @@ const Badge = ({ children, variant = "default", className = "" }) => {
     </span>
   );
 };
-
-export default Badge

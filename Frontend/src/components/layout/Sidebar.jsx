@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from "react-router-dom"
 import { LayoutDashboard, FolderGit2, GitPullRequest } from "lucide-react"
 
-const Sidebar = () => {
+export const Sidebar = () => {
 
     const navItems = [
         { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -36,4 +36,3 @@ const Sidebar = () => {
     )
 }
 
-export default Sidebar

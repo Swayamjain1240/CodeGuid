@@ -2,7 +2,7 @@ import React from 'react'
 import { User, LogOut } from "lucide-react"
 
 
-const UserProfile = ({ user, onLogout }) => {
+export const UserProfile = ({ user, onLogout }) => {
 
     if (!user) return null;
 
@@ -36,4 +36,3 @@ const UserProfile = ({ user, onLogout }) => {
     )
 }
 
-export default UserProfile

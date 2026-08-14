@@ -2,7 +2,7 @@ import React from 'react'
 import { getGradePercentage } from "../DashboardUtils.jsx"
 
 
-export const GradeDistributionCard = () => {
+export const GradeDistributionCard = ({ grades = {} }) => {
 
     const gradeKeys = ["A", "B", "C", "D", "F"]
 

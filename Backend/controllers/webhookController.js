@@ -1,6 +1,6 @@
 import PullRequest from "../models/pullRequestModel.js"
 import Repository from "../models/repositoryModel.js"
-import {prQueue} from "../queues/prQueue.js"
+import { prQueue } from "../queues/prQueue.js"
 
 export const handleGitHubWebhook = async (req, res, next) => {
     try {
@@ -12,8 +12,11 @@ export const handleGitHubWebhook = async (req, res, next) => {
 
         const { action, pull_request, repository, sender } = req.body;
 
-        if (!pull_request || !repository || !sender){
-            return res.status(401).json({message:"all field required"});
+        if (!pull_request || !repository || !sender) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid GitHub webhook payload",
+            });
         }
 
         const allowedActions = ['opened', 'reopened', 'synchronize'];

@@ -2,7 +2,7 @@ import React from 'react'
 import { FolderGit2, Lock, Globe, ExternalLink } from "lucide-react"
 
 
-const RepoCard = () => {
+export const RepoCard = () => {
     return (
         <div className="bg-slate-900 border border-slate-800 hover:border-slate-700/80 rounded-xl p-5 transition-all flex flex-col justify-between gap-4">
             <div className="flex items-start justify-between gap-3">
@@ -51,5 +51,3 @@ const RepoCard = () => {
         </div>
     );
 }
-
-export default RepoCard

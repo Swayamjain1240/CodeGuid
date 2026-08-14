@@ -15,7 +15,7 @@ export const Repositories = () => {
     const [togglingId, setTogglingId] = useState(null);
     const [error, setError] = useState(null);
 
-    const frtchRepos = async () => {
+    const fetchRepos = async () => {
         try {
             setLoading(true);
             setError(null);

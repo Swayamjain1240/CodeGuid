@@ -1,7 +1,7 @@
 import React from 'react'
 import { Shield, LogOut, User } from "lucide-react"
 
-const Navbar = ({ user, onLogout }) => {
+export const Navbar = ({ user, onLogout }) => {
     return (
         <header className='h-16 border-b border-slate-800 bg-slate-900/50 backdrop-blur px-6 flex items-center justify-between sticky top-0 z-40'>
             <div className='flex items-center gap-3'>
@@ -43,5 +43,3 @@ const Navbar = ({ user, onLogout }) => {
         </header>
     );
 };
-
-export default Navbar

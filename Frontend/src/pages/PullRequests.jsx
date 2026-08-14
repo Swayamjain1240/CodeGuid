@@ -29,9 +29,6 @@ export const PullRequests = () => {
     useEffect(() => {
         fetchPRs(page);
     }, [page]);
-    return (
-        <div>PullRequests</div>
-    )
 
     return (
         <div className="space-y-6">

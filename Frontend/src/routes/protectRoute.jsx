@@ -1,8 +1,8 @@
 import React from 'react'
-import { Navigate } from "react-router-dom"
+import { Navigate, Outlet } from "react-router-dom"
 import { Spinner } from "../components/common/Spinner.jsx"
 
-function ProtectRoute({ isAuthenticated, isLoading, children }) {
+export function ProtectRoute({ isAuthenticated, isLoading, children }) {
 
     if (isLoading) {
         return (
@@ -12,12 +12,10 @@ function ProtectRoute({ isAuthenticated, isLoading, children }) {
         );
     }
 
-    if(isAuthenticated){
+    if(!isAuthenticated){
         return <Navigate to="/login" replace />;
     }
 
-    return children;
+    return <Outlet />;
         
 };
-
-export default ProtectRoute

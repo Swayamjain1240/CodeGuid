@@ -57,36 +57,6 @@ CodeGuide AI is an enterprise-grade automated code review and security auditing 
                │      (Port 8000)      │
                └───────────┴───────────┘
 
-📁 Project Structure
-
-CodeGuide/
-├── client/                 # Frontend React Application
-│   ├── src/
-│   │   ├── api/            # Axios instance and API service definitions
-│   │   ├── components/     # Reusable design system components (Button, Modal, etc.)
-│   │   ├── features/       # Feature-driven logic (auth, dashboard, PRs, repos)
-│   │   ├── hooks/          # Custom React hooks (useAuth, etc.)
-│   │   ├── pages/          # View routes (Dashboard, Repositories, PullRequests)
-│   │   └── routes/         # App routing engine and protected routes
-│   └── package.json
-│
-├── backend/                # Node.js + Express Core API
-│   ├── src/
-│   │   ├── controllers/    # Route controllers (Auth, Repositories, PRs)
-│   │   ├── middleware/     # JWT verification & CORS configuration
-│   │   ├── routes/         # Express API endpoint definitions
-│   │   └── services/       # GitHub API integration & AI service HTTP client
-│   └── package.json
-│
-└── aiServices/             # Python FastAPI Microservice
-    ├── venv/               # Isolated Python virtual environment
-    ├── .env                # OpenAI API credentials & server configuration
-    ├── .gitignore          # Python ignore patterns
-    ├── requirements.txt    # Python package manifest
-    ├── schemas.py          # Pydantic data schemas (AuditRequest, VulnerabilityIssue)
-    ├── analyzer.py         # LangChain workflow and OpenAI prompt engine
-    └── main.py             # FastAPI entry point & CORS configuration
-
     
 🚀 Installation & Usage
 

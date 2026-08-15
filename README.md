@@ -50,7 +50,7 @@ React Dashboard
 
 ```
 
-🎯 Problem
+##🎯 Problem
 
 Modern software teams create Pull Requests continuously.
 
@@ -64,7 +64,7 @@ Performed too late in the development lifecycle
 
 CodeGuide addresses this by bringing an automated AI-powered security review layer directly into the GitHub workflow.
 
-💡 Solution
+##💡 Solution
 
 CodeGuide analyzes Pull Request changes and produces a structured security report containing:
 
@@ -78,7 +78,7 @@ Recommended remediation
 
 The goal is not to replace professional security testing, but to provide an automated first layer of security analysis during development.
 
-✨ Features
+##✨ Features
 
 🔐 Authentication
 GitHub OAuth authentication
@@ -115,7 +115,7 @@ Vulnerability distribution
 Security grade distribution
 Recent security scans
 
-🏗️ Architecture
+##🏗️ Architecture
 
                     ┌────────────────────┐
                     │      GitHub        │
@@ -166,7 +166,7 @@ Recent security scans
                     │   React Dashboard  │
                     └────────────────────┘
 
-🔄 End-to-End Workflow
+##🔄 End-to-End Workflow
 
 1. Developer creates Pull Request
                 ↓
@@ -193,10 +193,10 @@ Recent security scans
 12. Dashboard displays security report
 
 
-🧠 AI Security Report
+##🧠 AI Security Report
 <img width="766" height="367" alt="image" src="https://github.com/user-attachments/assets/3e009e05-bd27-4993-954c-ebfa7f9cec6c" />
 
-📊 Security Grading
+##📊 Security Grading
 
 Grade	Risk Level
 🟢 A	Excellent
@@ -205,9 +205,9 @@ Grade	Risk Level
 🟠 D	High Risk
 🔴 F	Critical Risk
 
-🛠️ Technology Stack
+##🛠️ Technology Stack
 
-Frontend
+#Frontend
 React ->	UI
 Vite ->	Frontend tooling
 React Router ->	Routing
@@ -215,7 +215,7 @@ Axios	API -> communication
 Tailwind CSS ->	Styling
 Lucide React ->	Icons
 
-Backend
+#Backend
 Node.js ->	Runtime
 Express.js ->	REST API
 MongoDB ->	Database
@@ -226,50 +226,16 @@ BullMQ ->	Job processing
 Redis ->	Queue backend
 GitHub API ->	GitHub integration
 
-AI Service
+#AI Service
 Python ->	AI service runtime
 FastAPI	 -> AI microservice API
 Pydantic ->	Data validation
 LangChain ->	LLM application layer
 OpenAI ->	Security analysis
 
-📁 Project Structure
-CodeGuide/
-│
-├── Backend/
-│   ├── config/
-│   ├── controllers/
-│   ├── middlewares/
-│   ├── models/
-│   ├── queues/
-│   ├── routers/
-│   ├── services/
-│   ├── index.js
-│   └── package.json
-│
-├── Frontend/
-│   ├── src/
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── features/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   ├── routes/
-│   │   └── utils/
-│   └── package.json
-│
-├── aiServices/
-│   ├── analyzer.py
-│   ├── schemas.py
-│   ├── main.py
-│   ├── requirements.txt
-│   └── .gitignore
-│
-├── package.json
-├── package-lock.json
-└── README.md
 
-🔒 Security Architecture
+
+##🔒 Security Architecture
 
 CodeGuide includes security controls at multiple layers.
 
@@ -291,53 +257,52 @@ Environment-based secrets
 Separated AI microservice
 
 
-🔌 API
+##🔌 API
+
 Authentication
 GET  /api/v1/auth/me
+
 Repositories
 GET  /api/v1/repositories
+
 Pull Requests
 GET  /api/v1/pull-requests
+
 Dashboard
 GET  /api/v1/dashboard/stats
+
 GitHub Webhook
 POST /api/v1/webhooks/github
+
 AI Service
 GET  /health
 POST /analyze
 
-⚙️ Environment Setup
-Backend .env
+##⚙️ Environment Setup
+
+#Backend .env
+
 PORT=5000
-
-
 MONGODB_URI=your_mongodb_uri
-
-
 ACCESS_TOKEN_SECRET=your_access_token_secret
 REFRESH_TOKEN_SECRET=your_refresh_token_secret
-
-
 GITHUB_CLIENT_ID=your_github_client_id
 GITHUB_CLIENT_SECRET=your_github_client_secret
 GITHUB_WEBHOOK_SECRET=your_webhook_secret
-
-
 REDIS_HOST=localhost
 REDIS_PORT=6379
-
-
 AI_SERVICE_URL=http://localhost:8000
-AI Service .env
+
+#AI Service .env
 OPENAI_API_KEY=your_openai_api_key
 PORT=8000
-Frontend .env
+
+#Frontend .env
 VITE_API_URL=http://localhost:5000/api/v1
 
 
-👨‍💻 Author
+###👨‍💻 Author
 Swayam Jain
-
 Software Developer |Full-stack AI Developer
 
 GitHub:

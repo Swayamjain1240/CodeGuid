@@ -51,7 +51,7 @@ React Dashboard
 ---
 
 ##🎯 Problem
-```
+
 
 Modern software teams create Pull Requests continuously.
 
@@ -64,7 +64,7 @@ Easy to overlook during rapid development
 Performed too late in the development lifecycle
 
 CodeGuide addresses this by bringing an automated AI-powered security review layer directly into the GitHub workflow.
-```
+
 ---
 
 ##💡 Solution
@@ -123,6 +123,7 @@ Recent security scans
 ---
 
 ##🏗️ Architecture
+```text
 
                     ┌────────────────────┐
                     │      GitHub        │

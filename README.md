@@ -168,54 +168,6 @@ EOF
 npm run dev
 
 
-🔌 API Documentation
-
-AI Microservice Endpoints (http://localhost:8000)
-
-1. GET /health
-Returns service operational health.
-
-Response (200 OK):
-
-JSON
-{
-  "status": "OK",
-  "service": "aiServices"
-}
-
-
-2. POST /analyze
-Analyzes raw Git patch data and evaluates potential vulnerabilities.
-
-Request Body:
-
-JSON
-{
-  "prTitle": "Refactor User Authentication",
-  "prDescription": "Replaced session middleware with JWT handling.",
-  "patch": "diff --git a/auth.js b/auth.js\n+ const secret = 'hardcoded_jwt_secret';"
-}
-Response (200 OK):
-
-JSON
-{
-  "securityGrade": "F",
-  "vulnerabilities": [
-    {
-      "type": "Hardcoded Secret",
-      "severity": "critical",
-      "file": "auth.js",
-      "line": 2,
-      "description": "Exposing production secrets directly in source code.",
-      "recommendation": "Migrate secret to environment variables accessed via process.env.JWT_SECRET."
-    }
-  ],
-
-  
-  "summary": "Critical security risk detected: Sensitive credential hardcoded into application source code."
-}
-
-
 🎯 Key Engineering Decisions
 
 Polyglot Microservices Strategy: Chosen to leverage Node.js for high-concurrency API proxying, GitHub webhook handling, and user session management, while offloading LLM orchestrations to Python's rich ecosystem (FastAPI, LangChain, Pydantic).

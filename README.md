@@ -48,7 +48,7 @@ MongoDB
    ↓
 React Dashboard
 
-```
+---
 
 ##🎯 Problem
 
@@ -64,6 +64,8 @@ Performed too late in the development lifecycle
 
 CodeGuide addresses this by bringing an automated AI-powered security review layer directly into the GitHub workflow.
 
+---
+
 ##💡 Solution
 
 CodeGuide analyzes Pull Request changes and produces a structured security report containing:
@@ -77,6 +79,8 @@ Vulnerability description
 Recommended remediation
 
 The goal is not to replace professional security testing, but to provide an automated first layer of security analysis during development.
+
+---
 
 ##✨ Features
 
@@ -114,6 +118,8 @@ Security pass rate
 Vulnerability distribution
 Security grade distribution
 Recent security scans
+
+---
 
 ##🏗️ Architecture
 
@@ -166,6 +172,8 @@ Recent security scans
                     │   React Dashboard  │
                     └────────────────────┘
 
+---
+
 ##🔄 End-to-End Workflow
 
 1. Developer creates Pull Request
@@ -192,6 +200,7 @@ Recent security scans
                 ↓
 12. Dashboard displays security report
 
+---
 
 ##🧠 AI Security Report
 <img width="766" height="367" alt="image" src="https://github.com/user-attachments/assets/3e009e05-bd27-4993-954c-ebfa7f9cec6c" />
@@ -205,9 +214,11 @@ Grade	Risk Level
 🟠 D	High Risk
 🔴 F	Critical Risk
 
+---
+
 ##🛠️ Technology Stack
 
-#Frontend
+###Frontend
 React ->	UI
 Vite ->	Frontend tooling
 React Router ->	Routing
@@ -215,7 +226,7 @@ Axios	API -> communication
 Tailwind CSS ->	Styling
 Lucide React ->	Icons
 
-#Backend
+###Backend
 Node.js ->	Runtime
 Express.js ->	REST API
 MongoDB ->	Database
@@ -226,61 +237,64 @@ BullMQ ->	Job processing
 Redis ->	Queue backend
 GitHub API ->	GitHub integration
 
-#AI Service
+###AI Service
 Python ->	AI service runtime
 FastAPI	 -> AI microservice API
 Pydantic ->	Data validation
 LangChain ->	LLM application layer
 OpenAI ->	Security analysis
 
-
+---
 
 ##🔒 Security Architecture
 
 CodeGuide includes security controls at multiple layers.
 
-Application Security
-JWT authentication
-Protected routes
-Token validation
-Request validation
-API rate limiting
-GitHub Security
-OAuth authentication
-Webhook signature verification
-Repository ownership validation
-Pull Request validation
-Infrastructure
-Redis-backed job processing
-Retryable background jobs
-Environment-based secrets
-Separated AI microservice
+1. Application Security
+2. JWT authentication
+3. Protected routes
+4. Token validation
+5. Request validation
+6. API rate limiting
+7. GitHub Security
+8. OAuth authentication
+9. Webhook signature verification
+10. Repository ownership validation
+11. Pull Request validation
+12. Infrastructure
+13. Redis-backed job processing
+14. Retryable background jobs
+15. Environment-based secrets
+16. Separated AI microservice
 
+---
 
 ##🔌 API
 
-Authentication
+####Authentication
 GET  /api/v1/auth/me
 
-Repositories
+####Repositories
 GET  /api/v1/repositories
 
-Pull Requests
+####Pull Requests
 GET  /api/v1/pull-requests
 
-Dashboard
+####Dashboard
 GET  /api/v1/dashboard/stats
 
-GitHub Webhook
+####GitHub Webhook
 POST /api/v1/webhooks/github
 
-AI Service
+####AI Service
 GET  /health
 POST /analyze
 
-###**⚙️ Environment Setup**
+---
 
-#Backend .env
+###⚙️ Environment Setup
+
+###Backend .env
 
 PORT=5000
 MONGODB_URI=your_mongodb_uri
@@ -293,17 +307,19 @@ REDIS_HOST=localhost
 REDIS_PORT=6379
 AI_SERVICE_URL=http://localhost:8000
 
-#AI Service .env
+###AI Service .env
 OPENAI_API_KEY=your_openai_api_key
 PORT=8000
 
-#Frontend .env
+###Frontend .env
 VITE_API_URL=http://localhost:5000/api/v1
 
+---
 
-###👨‍💻 Author
-Swayam Jain
-Software Developer |Full-stack AI Developer
+#👨‍💻 Author
 
-GitHub:
+**Swayam Jain**
+**Software Developer |Full-stack AI Developer**
+
+**GitHub:**
 https://github.com/Swayamjain1240

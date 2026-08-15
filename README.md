@@ -278,7 +278,7 @@ AI Service
 GET  /health
 POST /analyze
 
-##⚙️ Environment Setup
+###**⚙️ Environment Setup**
 
 #Backend .env
 

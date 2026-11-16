@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, GitPullRequest } from "lucide-react";
 import { Table } from "../../../components/common/Table.jsx";
 import { SecurityGradeBadge } from "./SecurityGradeBadge.jsx";
-import { formData  } from "../../../utils/formatData.js";
+import { formatDate } from "../../../utils/formatData.js";
 
 export const PRListTable = ({ pullRequests = [] }) => {
   const headers = ["PR Title", "Repository", "Grade", "Vulnerabilities", "Scanned At", "Action"];
@@ -13,6 +13,7 @@ export const PRListTable = ({ pullRequests = [] }) => {
       {pullRequests.map((pr) => {
         const id = pr._id || pr.id;
         const vulnLength = pr.vulnerabilities?.length || pr.issuesCount || 0;
+        const repositoryName = pr.repository?.fullName || pr.repository?.name || pr.repositoryName;
 
         return (
           <tr key={id} className="hover:bg-slate-800/40 transition-colors">
@@ -20,7 +21,7 @@ export const PRListTable = ({ pullRequests = [] }) => {
               <GitPullRequest className="w-4 h-4 text-cyan-400 shrink-0" />
               <span className="truncate max-w-xs">{pr.title}</span>
             </td>
-            <td className="px-6 py-4 text-slate-400">{pr.repositoryName || pr.repo}</td>
+            <td className="px-6 py-4 text-slate-400">{repositoryName || "—"}</td>
             <td className="px-6 py-4">
               <SecurityGradeBadge grade={pr.securityGrade || pr.grade} />
             </td>

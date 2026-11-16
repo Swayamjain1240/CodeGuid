@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { pullRequestApi } from "../api/pullRequestApi.js"
+import { getList, getPagination } from "../api/response.js"
 import { PRListTable } from "../features/pullRequests/components/PRListTable.jsx"
 import { Pagination } from "../components/common/Pagination.jsx"
 import { Spinner } from "../components/common/Spinner.jsx"
@@ -17,8 +18,8 @@ export const PullRequests = () => {
             setLoading(true);
             setError(null);
             const data = await pullRequestApi.getPullRequests({ page: currentPage, limit: 10 });
-            setPullRequests(Array.isArray(data) ? data : data.pullRequests || data.data || []);
-            setTotalPages(data.totalPages || 1);
+            setPullRequests(getList(data));
+            setTotalPages(getPagination(data).totalPages);
         } catch (err) {
             setError(err.message || "Failed to load pull request scans.");
         } finally {

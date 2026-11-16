@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Search } from 'lucide-react';
 import { repositoryApi } from "../api/repositoryApi.js"
+import { getList } from "../api/response.js"
 import { filterRepositories } from "../features/repositories/repositoryUtils.js"
 import { RepoList } from "../features/repositories/components/RepoList.jsx"
 import { RepoSyncButton } from "../features/repositories/components/RepoSyncButton.jsx"
@@ -21,7 +22,7 @@ export const Repositories = () => {
             setError(null);
 
             const data = await repositoryApi.getRepositories();
-            setRepos(Array.isArray(data) ? data : data.Repositories || []);
+            setRepos(getList(data));
         } catch (error) {
             setError(error.message || "Failed to load repositories.")
         } finally {
@@ -41,7 +42,7 @@ export const Repositories = () => {
             await repositoryApi.syncRepositories();
             await fetchRepos()
         } catch (error) {
-            setError(err.message || "Failed to sync repositories with GitHub.");
+            setError(error.message || "Failed to sync repositories with GitHub.");
         } finally {
             setSyncing(false);
         }
@@ -56,7 +57,7 @@ export const Repositories = () => {
                 prev.map((repo) => (repo._id || repo.id) === id ? { ...repo, isScanningEnabled: !repo.isScanningEnabled } : repo)
             )
         } catch (error) {
-            setError(err.message || "Failed to update repository scanning setting.");
+            setError(error.message || "Failed to update repository scanning setting.");
         } finally {
             setTogglingId(null);
         }

@@ -1,9 +1,14 @@
 import mongoose from "mongoose";
 
 const vulnerabilityFindSchema = new mongoose.Schema({
-  title: {
+  // Canonical field produced by the AI pipeline.
+  type: {
     type: String,
     required: true,
+  },
+  // Legacy alias kept so older readers/documents keep working.
+  title: {
+    type: String,
   },
   severity: {
     type: String,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from "react-router-dom"
 import { pullRequestApi } from '../api/pullRequestApi.js';
+import { getItem } from '../api/response.js';
 import { Spinner } from '../components/common/Spinner.jsx';
 import { ArrowLeft, ShieldCheck, ShieldAlert } from 'lucide-react';
 import { ErrorMessage } from '../components/common/ErrorMessage.jsx';
@@ -11,7 +12,7 @@ export const PullRequestsDetail = () => {
 
     const { id } = useParams();
     const [pr, setPr] = useState(null);
-    const [loading, setLoading] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchPRDetails = async () => {
@@ -20,7 +21,7 @@ export const PullRequestsDetail = () => {
             setError(null);
 
             const data = await pullRequestApi.getPullRequestById(id);
-            setPr(data.pullRequest || data);
+            setPr(getItem(data));
 
         } catch (error) {
             setError(error.message || "Failed to load pull request audit details.");

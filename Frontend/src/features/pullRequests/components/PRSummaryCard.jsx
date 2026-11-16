@@ -1,9 +1,13 @@
 import React from "react";
 import { GitPullRequest, ExternalLink, Calendar } from "lucide-react";
 import { SecurityGradeBadge } from "./SecurityGradeBadge.jsx";
-import { formData } from "../../../utils/formatData.js";
+import { formatDate } from "../../../utils/formatData.js";
 
 export const PRSummaryCard = ({ pr }) => {
+  const repositoryName = pr?.repository?.fullName || pr?.repository?.name || pr?.repositoryName || pr?.repo;
+  const repositoryUrl = pr?.repository?.htmlUrl || pr?.htmlUrl;
+  const pullRequestUrl = repositoryUrl && pr?.prNumber ? `${repositoryUrl}/pull/${pr.prNumber}` : null;
+
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -17,16 +21,16 @@ export const PRSummaryCard = ({ pr }) => {
               <h2 className="text-xl font-bold text-slate-100">{pr?.title || "Pull Request Audit"}</h2>
             </div>
             <p className="text-xs text-slate-400 mt-1">
-              Repository: <span className="text-slate-200 font-medium">{pr?.repositoryName || pr?.repo || "Connected Repo"}</span>
+              Repository: <span className="text-slate-200 font-medium">{repositoryName || "Connected Repo"}</span>
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <SecurityGradeBadge grade={pr?.securityGrade || pr?.grade} className="px-3 py-1 text-sm" />
-          {pr?.htmlUrl && (
+          {pullRequestUrl && (
             <a
-              href={pr.htmlUrl}
+              href={pullRequestUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"

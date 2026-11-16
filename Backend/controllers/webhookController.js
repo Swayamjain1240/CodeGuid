@@ -1,8 +1,8 @@
-import PullRequest from "../models/pullRequestModel.js"
-import Repository from "../models/repositoryModel.js"
-import { prQueue } from "../queues/prQueue.js"
+// The queue is resolved lazily so that importing this controller (for tests or for
+// ignored webhook events) never opens a Redis connection.
+const resolveQueue = async (queue) => queue ?? (await import("../queues/prQueue.js")).prQueue;
 
-export const handleGitHubWebhook = async (req, res, next) => {
+export const createWebhookHandler = ({ queue } = {}) => async (req, res) => {
     try {
         const event = req.headers['x-github-event'];
 
@@ -39,7 +39,9 @@ export const handleGitHubWebhook = async (req, res, next) => {
             commitSha: pull_request.head.sha,
         };
 
-        await prQueue.add('analyze-pr', jobData, {
+        const activeQueue = await resolveQueue(queue);
+
+        await activeQueue.add('analyze-pr', jobData, {
             attempts: 3,
             backoff: {
                 type: 'exponential',
@@ -59,3 +61,5 @@ export const handleGitHubWebhook = async (req, res, next) => {
         return res.status(500).json({ error: 'Failed to process incoming webhook.' });
     }
 };
+
+export const handleGitHubWebhook = createWebhookHandler();

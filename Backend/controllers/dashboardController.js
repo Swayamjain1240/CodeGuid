@@ -1,6 +1,14 @@
 import PullRequest from "../models/pullRequestModel.js"
 import Repository from "../models/repositoryModel.js"
 import { PR_STATUS } from "../config/constants.js"
+import { buildDashboardPayload, GRADES } from "../services/dashboardService.js"
+
+const toCountObject = (stats = []) => {
+    return stats.reduce((counts, stat) => {
+        if (stat?._id) counts[stat._id] = stat.count;
+        return counts;
+    }, {});
+};
 
 export const getDashboardStats = async (req, res) => {
     try {
@@ -8,7 +16,6 @@ export const getDashboardStats = async (req, res) => {
 
         const userRepo = await Repository.find({ owner: userId }).select("_id");
         const repoId = userRepo.map((repo) => repo._id);
-
 
         const [
             totalRepos,
@@ -23,31 +30,28 @@ export const getDashboardStats = async (req, res) => {
             PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.FAILED }),
             PullRequest.countDocuments({ repository: { $in: repoId }, status: PR_STATUS.SCANNING }),
         ]);
-        const passRate = totalPRs > 0 ? Number(((passedPRs / totalPRs) * 100).toFixed(1)) : 100;
 
-        const vulnerabilityStats = await PullRequest.aggregate([
-            { $match: { repository: { $in: repoId } } },
-            { $unwind: '$vulnerabilities' },
-            {
-                $group: {
-                    _id: '$vulnerabilities.severity',
-                    count: { $sum: 1 },
+        const [vulnerabilityStats, gradeStats] = await Promise.all([
+            PullRequest.aggregate([
+                { $match: { repository: { $in: repoId } } },
+                { $unwind: '$vulnerabilities' },
+                {
+                    $group: {
+                        _id: '$vulnerabilities.severity',
+                        count: { $sum: 1 },
+                    },
                 },
-            },
+            ]),
+            PullRequest.aggregate([
+                { $match: { repository: { $in: repoId }, securityGrade: { $in: GRADES } } },
+                {
+                    $group: {
+                        _id: '$securityGrade',
+                        count: { $sum: 1 },
+                    },
+                },
+            ]),
         ]);
-
-        const severityCounts = {
-            CRITICAL: 0,
-            HIGH: 0,
-            MEDIUM: 0,
-            LOW: 0,
-        };
-
-        vulnerabilityStats.forEach((stat) => {
-            if (severityCounts[stat._id] !== undefined) {
-                severityCounts[stat._id] = stat.count;
-            }
-        });
 
         const recentScans = await PullRequest.find({ repository: { $in: repoId } })
             .sort({ createdAt: -1 })
@@ -55,26 +59,26 @@ export const getDashboardStats = async (req, res) => {
             .populate('repository', 'name fullName')
             .select('prNumber title status securityGrade vulnerabilities createdAt')
 
-
+        const data = buildDashboardPayload({
+            counts: {
+                totalRepos,
+                totalPRs,
+                passedPRs,
+                failedPRs,
+                scanningPRs,
+            },
+            severityCounts: toCountObject(vulnerabilityStats),
+            gradeCounts: toCountObject(gradeStats),
+            recentScans,
+        });
 
         return res.status(200).json({
             success: true,
-            data: {
-                overview: {
-                    totalRepos,
-                    totalPRs,
-                    passedPRs,
-                    failedPRs,
-                    scanningPRs,
-                    passRate,
-                },
-                vulnerabilities: severityCounts,
-                recentScans,
-            },
+            data,
         });
 
     } catch (error) {
-        console.error("error in get dashboard starts");
+        console.error("error in getDashboardStats", error);
         return res.status(500).json({ success: false, message: "internal server error" });
     }
 };

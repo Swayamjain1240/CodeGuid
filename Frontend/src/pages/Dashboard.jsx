@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FolderGit2, GitPullRequest, ShieldAlert, ShieldCheck } from "lucide-react"
 import { dashboardApi } from "../api/dashboardApi.js"
+import { getData } from "../api/response.js"
 import { MetricCard } from "../features/dashboard/components/MetricCard.jsx"
 import { GradeDistributionCard } from "../features/dashboard/components/GradeDistributionCard.jsx"
 import { Spinner } from "../components/common/Spinner.jsx"
@@ -8,8 +9,8 @@ import { ErrorMessage } from "../components/common/ErrorMessage.jsx"
 
 export const Dashboard = () => {
 
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(null);
+  const [metrics, setMetrics] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
 
@@ -19,7 +20,7 @@ export const Dashboard = () => {
       setError(null);
 
       const data = await dashboardApi.getMetrics();
-      setStats(data.stats || data);
+      setMetrics(getData(data) ?? null);
     } catch (error) {
       setError(error.message || " Failed to load dashboard metrics. ")
     } finally {
@@ -38,6 +39,12 @@ export const Dashboard = () => {
       </div>
     );
   }
+
+  const overview = metrics?.overview ?? {};
+  const severity = metrics?.vulnerabilities ?? {};
+  const vulnerabilityTotal = metrics?.vulnerabilityTotal
+    ?? Object.values(severity).reduce((sum, count) => sum + (Number(count) || 0), 0);
+
   return (
     <div className="space-y-6">
       
@@ -50,34 +57,34 @@ export const Dashboard = () => {
 
       <ErrorMessage message={error} onRetry={fetchDashboardStats} />
 
-      {stats && (
+      {metrics && (
         <>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <MetricCard
               title="Connected Repositories"
-              value={stats.totalRepositories}
+              value={overview.totalRepos ?? 0}
               subtext="Repositories synced"
               icon={FolderGit2}
               color="cyan"
             />
             <MetricCard
               title="Scanned Pull Requests"
-              value={stats.totalScannedPRs || stats.totalPRs}
+              value={overview.totalPRs ?? 0}
               subtext="Audited PRs"
               icon={GitPullRequest}
               color="emerald"
             />
             <MetricCard
               title="Open Vulnerabilities"
-              value={stats.totalVulnerabilities || stats.openIssues}
+              value={vulnerabilityTotal}
               subtext="Issues found"
               icon={ShieldAlert}
               color="rose"
             />
             <MetricCard
               title="Average Security Grade"
-              value={stats.averageGrade || "A"}
+              value={metrics.averageGrade ?? "—"}
               subtext="Overall codebase health"
               icon={ShieldCheck}
               color="amber"
@@ -86,7 +93,7 @@ export const Dashboard = () => {
 
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <GradeDistributionCard grades={stats.gradeDistribution || stats.grades} />
+            <GradeDistributionCard grades={metrics.gradeDistribution ?? {}} />
 
             
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">

@@ -1,8 +1,13 @@
 import React from 'react'
-import { FolderGit2, Lock, Globe, ExternalLink } from "lucide-react"
+import { FolderGit2, Lock, Globe, ExternalLink } from 'lucide-react'
 
 
-export const RepoCard = () => {
+export const RepoCard = ({ repo, onToggleScan, isToggling = false }) => {
+    if (!repo) return null;
+
+    const isPrivate = repo.private ?? repo.isPrivate;
+    const repoId = repo._id || repo.id;
+
     return (
         <div className="bg-slate-900 border border-slate-800 hover:border-slate-700/80 rounded-xl p-5 transition-all flex flex-col justify-between gap-4">
             <div className="flex items-start justify-between gap-3">
@@ -13,7 +18,7 @@ export const RepoCard = () => {
                     <div>
                         <h3 className="font-semibold text-slate-100 text-sm flex items-center gap-2">
                             {repo.name}
-                            {repo.isPrivate ? (
+                            {isPrivate ? (
                                 <Lock className="w-3.5 h-3.5 text-amber-400" title="Private" />
                             ) : (
                                 <Globe className="w-3.5 h-3.5 text-slate-500" title="Public" />
@@ -41,7 +46,7 @@ export const RepoCard = () => {
                     <input
                         type="checkbox"
                         checked={Boolean(repo.isScanningEnabled)}
-                        onChange={() => onToggleScan(repo._id || repo.id)}
+                        onChange={() => onToggleScan?.(repoId)}
                         disabled={isToggling}
                         className="sr-only peer"
                     />

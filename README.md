@@ -1,290 +1,579 @@
-# 🚧 CodeGuardian AI (Under Development)
+# 🚀 CodeGuide
 
-> **⚠️ This project is currently under active development. Features, architecture, and APIs may change before the first stable release.**
+> AI-Powered Pull Request Security Auditor
 
----
-
-# 🛡️ CodeGuardian AI
-
-**Autonomous Multi-Agent AI Code Reviewer for GitHub Pull Requests**
-
-CodeGuardian AI is an enterprise-grade AI-powered DevSecOps platform that automatically reviews GitHub Pull Requests for security vulnerabilities, code quality issues, syntax errors, and repository-specific best practices.
-
-Instead of relying solely on manual code reviews, CodeGuardian AI acts as an intelligent code reviewer that continuously analyzes pull requests using **LangGraph**, **Retrieval-Augmented Generation (RAG)**, **Tree-Sitter AST analysis**, and **LLMs**, then posts actionable review comments and suggested fixes directly back to GitHub.
+CodeGuide is an AI-powered developer security platform that automatically
+analyzes GitHub Pull Requests and identifies potential security vulnerabilities.
 
 ---
 
-# ✨ Features
+## 🔐 Security Architecture
 
-* 🔍 Automatic GitHub Pull Request Analysis
-* 🤖 Multi-Agent AI Workflow using LangGraph
-* 🛡️ Security Vulnerability Detection (OWASP Top 10)
-* 🌳 AST-aware Code Parsing using Tree-Sitter
-* 📚 Repository-Aware RAG with Qdrant
-* 💬 Automated Inline GitHub Review Comments
-* 🔄 Self-Correcting AI Validation Loop
-* 📊 Live React Dashboard
-* ⚡ Real-time Progress Streaming via Socket.io
-* 📦 Asynchronous Job Processing using BullMQ
-* 🐳 Docker-based Microservice Architecture
+CodeGuide provides multiple layers of security:
+
+- **JWT Authentication**
+- **Protected Routes**
+- **GitHub OAuth**
+- **Webhook Signature Verification**
+- **Rate Limiting**
+- **Input Validation**
+- **Repository Ownership Validation**
+- **Pull Request Validation**
+- **Background Job Processing**
+- **Environment-based Secrets**
 
 ---
 
-# 🏗️ System Architecture
+## 🎯 Problem
+
+Modern software teams create Pull Requests continuously.
+
+Traditional security review can be:
+
+- Time consuming
+- Difficult to scale
+- Dependent on manual review
+- Easy to overlook during rapid development
+- Performed too late in the development lifecycle
+
+CodeGuide addresses this problem by introducing an **automated AI-powered
+security review layer** into the Pull Request workflow.
+
+---
+
+## 💡 Solution
+
+CodeGuide automatically analyzes Pull Request changes and generates a
+structured security report containing:
+
+- Security grade
+- Vulnerability type
+- Severity
+- Affected file
+- Line number
+- Vulnerability description
+- Recommended remediation
+- Security summary
+
+---
+
+## ⚙️ Core Pipeline
 
 ```text
-Developer
-      │
-      ▼
 GitHub Pull Request
-      │
-      ▼
-──────────────────────────────────────────────
-Phase 1 : Webhook Ingestion (Node.js)
-──────────────────────────────────────────────
-Verify GitHub Signature
-Store Pull Request
-Create BullMQ Job
-Return 202 Accepted
-
-      │
-      ▼
-──────────────────────────────────────────────
-Phase 2 : BullMQ Queue
-──────────────────────────────────────────────
-Async Job Processing
-Background Workers
-Retry Mechanism
-
-      │
-      ▼
-──────────────────────────────────────────────
-Phase 3 : AI Service (FastAPI)
-──────────────────────────────────────────────
-Supervisor Agent
-Security Agent
-Quality Agent
-RAG Retrieval
-Tree-Sitter AST Validation
-Self-Correction Loop
-
-      │
-      ▼
-──────────────────────────────────────────────
-Phase 4 : Frontend Dashboard
-──────────────────────────────────────────────
-Live Logs
-Security Findings
-PR Timeline
-Code Suggestions
-Analytics
+        ↓
+GitHub Webhook
+        ↓
+Node.js / Express API
+        ↓
+BullMQ + Redis
+        ↓
+Background Worker
+        ↓
+AI Security Service
+        ↓
+LLM Analysis
+        ↓
+Security Report
+        ↓
+MongoDB
+        ↓
+React Dashboard
 ```
 
 ---
 
-# 🛠️ Tech Stack
+## 🧠 AI Security Analysis
 
-## Frontend
+The AI service is implemented as a separate **FastAPI microservice**.
 
-* React.js
-* Vite
-* Tailwind CSS
-* Socket.io Client
-* Axios
-* React Context API
+It receives:
 
-## Backend
+```json
+{
+  "prTitle": "Add authentication",
+  "prDescription": "Added login functionality",
+  "patch": "git diff content..."
+}
+```
 
-* Node.js
-* Express.js
-* MongoDB
-* BullMQ
-* Redis
-* Socket.io
-* GitHub Webhooks
+and returns a structured security report:
 
-## AI Service
-
-* Python
-* FastAPI
-* LangGraph
-* LangChain
-* Tree-Sitter
-* OpenAI / Groq
-* Qdrant Vector Database
-
-## DevOps
-
-* Docker
-* Docker Compose
-* NGINX
-* GitHub API
+```json
+{
+  "securityGrade": "B",
+  "vulnerabilities": [
+    {
+      "type": "Hardcoded Secret",
+      "severity": "High",
+      "file": "config.js",
+      "line": 12,
+      "description": "Sensitive credential detected.",
+      "recommendation": "Move the credential to environment variables."
+    }
+  ],
+  "summary": "Potential security issues were detected."
+}
+```
 
 ---
 
-# 📂 Project Structure
+## 🏗️ Architecture
 
 ```text
-CodeGuardian-AI/
-
-├── frontend/          # React Dashboard
-├── backend/           # Node.js API & GitHub Webhooks
-├── ai-service/        # FastAPI + LangGraph AI Engine
-├── docs/              # Project Documentation
-└── docker-compose.yml
+                    ┌─────────────────┐
+                    │     GitHub      │
+                    └────────┬────────┘
+                             │
+                       Pull Request
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ GitHub Webhook  │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ Express Backend │
+                    └────────┬────────┘
+                             │
+                       Queue Job
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ BullMQ + Redis  │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ Background      │
+                    │ Worker          │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ FastAPI AI      │
+                    │ Microservice    │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ LLM Security    │
+                    │ Analysis        │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │    MongoDB      │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ React Dashboard │
+                    └─────────────────┘
 ```
 
 ---
 
-# 🚀 Core Workflow
+## 🛠️ Tech Stack
 
-1. Developer opens or updates a GitHub Pull Request.
-2. GitHub sends a secure webhook event.
-3. Node.js verifies the HMAC signature.
-4. Pull Request is stored in MongoDB.
-5. BullMQ schedules an asynchronous AI job.
-6. FastAPI receives the PR information.
-7. LangGraph orchestrates multiple AI agents.
-8. Repository context is retrieved from Qdrant.
-9. Tree-Sitter validates generated code fixes.
-10. Self-correction runs if syntax errors are found.
-11. AI posts review comments to GitHub.
-12. Dashboard streams live progress and results.
+### Frontend
 
----
+- **React**
+- **Vite**
+- **React Router**
+- **Axios**
+- **Tailwind CSS**
+- **Lucide React**
 
-# 🧠 AI Agents
+### Backend
 
-### 🟢 Supervisor Agent
+- **Node.js**
+- **Express.js**
+- **MongoDB**
+- **Mongoose**
+- **JWT**
+- **BullMQ**
+- **Redis**
 
-* Coordinates the complete workflow
-* Manages agent execution
-* Controls state transitions
+### AI Service
 
-### 🔴 Security Agent
+- **Python**
+- **FastAPI**
+- **Pydantic**
+- **LangChain**
+- **OpenAI API**
+- **LLM Structured Output**
 
-* Detects OWASP Top 10 vulnerabilities
-* Finds credential leaks
-* Identifies insecure coding patterns
+### Integration
 
-### 🟡 Code Quality Agent
-
-* Reviews maintainability
-* Detects code duplication
-* Suggests refactoring opportunities
-
-### 🌳 AST Validation Agent
-
-* Parses generated code
-* Detects syntax errors
-* Triggers automatic self-correction
+- **GitHub OAuth**
+- **GitHub Webhooks**
+- **GitHub REST API**
 
 ---
 
-# 📊 Dashboard
+## 📁 Project Structure
 
-The React dashboard provides:
-
-* Repository Management
-* Pull Request History
-* Security Findings
-* Vulnerability Charts
-* AI Agent Live Logs
-* Audit Reports
-* Security Scores
-* Repository Analytics
-
----
-
-# 🔒 Security
-
-* GitHub Webhook HMAC Verification
-* OAuth Authentication
-* AES-256 Encrypted Tokens
-* Repository Isolation
-* Secure API Communication
-* Role-Based Access Control (Planned)
-
----
-
-# 📦 Planned Features
-
-* GitHub App Integration
-* Multi-Repository Support
-* Multi-Language Code Analysis
-* AI Generated Unit Tests
-* Custom Organization Security Policies
-* CI/CD Integration
-* Kubernetes Deployment
-* Slack & Discord Notifications
-* Team Analytics Dashboard
-* Performance Insights
+```text
+CodeGuide/
+│
+├── Backend/
+│   ├── controllers/
+│   ├── middlewares/
+│   ├── models/
+│   ├── queues/
+│   ├── routers/
+│   ├── services/
+│   └── index.js
+│
+├── Frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── features/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   └── routes/
+│   └── package.json
+│
+├── aiServices/
+│   ├── analyzer.py
+│   ├── schemas.py
+│   ├── main.py
+│   └── requirements.txt
+│
+├── package.json
+├── package-lock.json
+└── README.md
+```
 
 ---
 
-# 📸 Screenshots
+## 🔄 Pull Request Workflow
 
-> Screenshots will be added after the first working prototype.
+When a developer creates or updates a Pull Request:
+
+1. GitHub sends a webhook.
+2. Backend verifies the webhook signature.
+3. The PR information is validated.
+4. A security analysis job is added to **BullMQ**.
+5. Redis manages the background queue.
+6. The worker processes the job.
+7. GitHub PR diff is collected.
+8. The diff is sent to the **AI Security Service**.
+9. The LLM analyzes the code.
+10. A structured security report is generated.
+11. The report is stored in MongoDB.
+12. The React dashboard displays the result.
 
 ---
 
-# 🚀 Getting Started
+## 🔒 Security
+
+CodeGuide implements security controls at multiple levels.
+
+**Authentication**
+
+```text
+GitHub OAuth
+     ↓
+JWT
+     ↓
+Protected API Routes
+```
+
+**Webhook Security**
+
+```text
+GitHub Webhook
+     ↓
+x-hub-signature-256
+     ↓
+HMAC SHA-256 Verification
+     ↓
+Webhook Processing
+```
+
+Sensitive credentials are stored using environment variables:
+
+```env
+MONGODB_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+GITHUB_CLIENT_ID=your_client_id
+GITHUB_CLIENT_SECRET=your_client_secret
+GITHUB_WEBHOOK_SECRET=your_webhook_secret
+OPENAI_API_KEY=your_openai_api_key
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
 
 ```bash
-# Clone repository
-git clone https://github.com/your-username/CodeGuardian-AI.git
+git clone https://github.com/Swayamjain1240/CodeGuid.git
+cd CodeGuid
+```
 
-# Install frontend
-cd frontend
+### 2. Install dependencies
+
+```bash
 npm install
+```
 
-# Install backend
-cd ../backend
-npm install
+### 3. Start the complete application
 
-# Install AI Service
-cd ../ai-service
+```bash
+npm run dev
+```
+
+The root script starts the frontend and backend together.
+
+---
+
+## 🐍 Start AI Service
+
+Navigate to the AI service:
+
+```bash
+cd aiServices
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
----
+Start FastAPI:
 
-# 📅 Project Status
+```bash
+uvicorn main:app --reload --port 8000
+```
 
-| Module                  | Status            |
-| ----------------------- | ----------------- |
-| Frontend                | 🚧 In Development |
-| Backend API             | ✅  Complete      |
-| GitHub Webhooks         | ✅  Complete      |
-| BullMQ Queue            | ✅  Complete      |
-| FastAPI AI Service      | 🚧 In Development |
-| LangGraph Workflow      | 🚧 In Development |
-| Tree-Sitter Integration | 🚧 In Development |
-| Qdrant RAG              | 🚧 In Development |
-| Docker Deployment       | 🚧 In Development |
+Health check:
+
+```text
+GET http://localhost:8000/health
+```
 
 ---
 
-# 🤝 Contributing
+## 🌐 API Overview
 
-Contributions, suggestions, and feedback are welcome. Once the initial stable version is released, contribution guidelines will be published.
+### Authentication
+
+```http
+GET /api/v1/auth/me
+```
+
+Returns the currently authenticated user.
+
+### Repositories
+
+```http
+GET /api/v1/repositories
+```
+
+Fetches synchronized GitHub repositories.
+
+### Pull Requests
+
+```http
+GET /api/v1/pull-requests
+```
+
+Returns analyzed Pull Requests.
+
+### Pull Request Details
+
+```http
+GET /api/v1/pull-requests/:id
+```
+
+Returns the security analysis for a specific Pull Request.
+
+### GitHub Webhook
+
+```http
+POST /api/v1/webhooks/github
+```
+
+Receives Pull Request events from GitHub.
+
+### AI Analysis
+
+```http
+POST /analyze
+```
+
+Sends a Pull Request patch to the AI security analyzer.
 
 ---
 
-# 📄 License
+## 📊 Dashboard
 
-This project is intended for educational and portfolio purposes during development. A production license will be selected before the first public release.
+The React dashboard provides a centralized view of:
+
+- Total repositories
+- Pull Requests analyzed
+- Security grades
+- Vulnerability statistics
+- Security trends
+- Repository information
+- Pull Request audit reports
 
 ---
 
-# 👨‍💻 Author
+## 🧪 Example Security Findings
+
+CodeGuide can identify security issues such as:
+
+```text
+Hardcoded Secrets
+SQL Injection
+Command Injection
+Authentication Issues
+Authorization Problems
+Insecure Input Handling
+Sensitive Data Exposure
+Dangerous API Usage
+Security Misconfiguration
+Suspicious Code Patterns
+```
+
+---
+
+## 🔁 Background Processing
+
+Pull Request analysis is processed asynchronously using:
+
+```text
+Express
+  ↓
+BullMQ
+  ↓
+Redis
+  ↓
+Worker
+  ↓
+AI Service
+```
+
+This prevents expensive AI analysis from blocking normal API requests.
+
+Jobs support retry mechanisms with exponential backoff:
+
+```javascript
+{
+  attempts: 3,
+  backoff: {
+    type: "exponential",
+    delay: 5000
+  }
+}
+```
+
+---
+
+## 📌 Environment Variables
+
+### Backend
+
+```env
+PORT=5000
+MONGODB_URI=
+JWT_SECRET=
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+GITHUB_WEBHOOK_SECRET=
+REDIS_URL=
+AI_SERVICE_URL=
+```
+
+### AI Service
+
+```env
+OPENAI_API_KEY=
+PORT=8000
+```
+
+### Frontend
+
+```env
+VITE_API_URL=
+```
+
+---
+
+## 🧩 Future Improvements
+
+- [ ] Multi-model security analysis
+- [ ] CWE classification
+- [ ] OWASP mapping
+- [ ] Security trend analytics
+- [ ] Automatic remediation suggestions
+- [ ] GitHub PR comments
+- [ ] AI-generated fix patches
+- [ ] Repository-wide security scanning
+- [ ] Authentication anomaly detection
+- [ ] Advanced agentic security workflows
+
+---
+
+## 🎓 Project Highlights
+
+CodeGuide demonstrates practical implementation of:
+
+**Full-Stack Development**
+
+**AI / LLM Integration**
+
+**Microservice Architecture**
+
+**Event-Driven Architecture**
+
+**Background Job Processing**
+
+**GitHub API Integration**
+
+**Webhook Security**
+
+**Authentication & Authorization**
+
+**Database Design**
+
+**Production-Oriented API Design**
+
+---
+
+## 👨‍💻 Author
 
 **Swayam Jain**
 
-B.Tech Computer Science Engineering
+Software Developer | Full-stack AI Developer
 
-Building intelligent software systems using **Full Stack Development, AI, Machine Learning, LLMs, RAG, LangGraph, and Agentic AI.**
+GitHub:  
+https://github.com/Swayamjain1240
 
 ---
 
-⭐ **If you like this project, consider giving it a star once it's publicly released!**
+## ⭐ Support
+
+If you find this project useful, consider giving the repository a ⭐ on GitHub.
+
+---
